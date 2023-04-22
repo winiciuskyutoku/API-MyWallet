@@ -4,7 +4,7 @@ import {v4 as uuid} from "uuid"
 
 
 export async function postSingUp(req, res){
-    const {name, email, password, confirmPassword} = req.body
+    const {name, email, password} = req.body
 
     try {
 
@@ -17,7 +17,7 @@ export async function postSingUp(req, res){
 
         res.status(201).send(req.body)
     } catch (err) {
-        res.status(500).send("err.messages")
+        res.status(500).send(err.message)
     }
 }
 

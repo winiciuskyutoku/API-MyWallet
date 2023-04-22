@@ -8,7 +8,7 @@ const balanceRouter = Router()
 
 balanceRouter.use(authValidation)
 
-balanceRouter.post("/nova-transacao/:tipo", validateSchema(balanceSchema),postNewBalance)
+balanceRouter.post("/nova-transacao/:tipo", validateSchema(balanceSchema), postNewBalance)
 balanceRouter.get("/home", getBalance)
 
 export default balanceRouter
