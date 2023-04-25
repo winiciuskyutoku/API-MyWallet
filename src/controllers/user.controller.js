@@ -25,16 +25,32 @@ export async function postSingIn(req, res){
     const {email, password} = req.body
 
     try {
+
         const checkEmail = await db.collection("users").findOne({email})
         if(!checkEmail) return res.status(404).send("Email nao cadastrado")
 
         const correctPassword = bcrypt.compareSync(password, checkEmail.password)
         if(!correctPassword) return res.status(401).send("Senha incorreta")
 
+        const getUsername = await db.collection("users").findOne({email})
+
         const token = uuid()
         await db.collection("sessions").insertOne({token, idUser: checkEmail._id, email})
-        res.status(200).send(token)
+
+        const getBody = {token, getUsername}
+        res.status(200).send(getBody)
     } catch (err) {
+        res.status(500).send(err.message)
+    }
+}
+
+export async function deleteUser(req, res){
+    const {userToken} = req.body
+    try{
+        await db.collection("sessions").deleteOne({token: userToken})
+
+        res.status(204).send("Logout feito com sucesso")
+    } catch (err){
         res.status(500).send(err.message)
     }
 }

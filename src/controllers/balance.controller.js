@@ -5,12 +5,13 @@ export async function postNewBalance(req, res){
     const {value, description} = req.body
     const {tipo} = req.params
     const hour = dayjs()
+    const {email} = res.locals.session
 
     console.log(res.locals.session, "Comentario")
 
     try {
         const today = hour.format("DD/MM")
-        await db.collection("balance").insertOne({id: res.locals.session.idUser, value, description, today, tipo})
+        await db.collection("balance").insertOne({email, id: res.locals.session.idUser, value, description, today, tipo})
         
 
         res.status(201).send(`${tipo} criado com sucesso`)
@@ -20,11 +21,12 @@ export async function postNewBalance(req, res){
 }
 
 export  async function getBalance(req, res){
-    const {idUser} = res.locals.session
+    const {idUser, email} = res.locals.session
 
+    console.log(res.locals.session)
     console.log(idUser)
     try {
-        const userBalances = await db.collection("balance").find({id: idUser}).toArray()
+        const userBalances = await db.collection("balance").find({email}).toArray()
 
         res.send(userBalances)
     } catch (err){
